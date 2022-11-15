@@ -13,10 +13,8 @@ const reduxStore = createStore(rootReducer, composeWithDevTools());
 ReactDOM.render(
   <BrowserRouter>
     <Provider store={reduxStore}>
-
+      <App />
     </Provider>
-    <App />
-
   </BrowserRouter>
   ,
   document.getElementById('root')
