@@ -7,32 +7,34 @@ import {fieldCd, skinCodes}  from '../../constants/typeCodes';
 // import { withRouter } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import ResumePreview from './resumePreview'
+import {setContact, updateContact} from '../../redux/actions/contactActions';
+import { connect } from "react-redux";
 // import { connect } from "react-redux";
 
 function Contact(props) {
    let history = useHistory();
-   const [contact,setContact]= useState(props.contactSection);
-//    useEffect(() => {
-//        if(!props.document || !props.document.id || !props.document.skinCd)
-//        {
-//            history.push('/getting-started')
-//        }
-//    }, [])
-  
- 
+   const [contact,setContact]= useState(props.contact);
+
+    
+   useEffect(()=> {
+        if(props.document.id === null ){
+            history.push('/getting-started')
+        }
+   })
+    
   const onchange=(event)=>{
         var key =event.target.name;
         var val =event.target.value;
-        // this.setState({contactSection:update(this.state.contactSection,{$merge: {[key]:val}})});
         setContact({...contact,[key]:val})
     }
     const onSubmit= async()=>{
-        // if(props.contactSection!=null){
-        //     props.updateContact(props.document.id,contact);
-        // }
-        // else{
-        //     props.addContact(props.document.id,contact);
-        // }
+       
+        if(props.contact !== null){
+            props.updateContact(contact);
+        }   
+        else{
+            props.setContact(contact);  
+        }
 
         history.push('/education');
     }
@@ -132,6 +134,19 @@ function Contact(props) {
     );
 }
 
+const mapStateToProps = (state) => {
+    return {
+        document : state.document,
+        contact : state.contact
+    }
+}
 
-export default Contact
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setContact : (contact) => dispatch(setContact(contact)),
+        updateContact : (contact) => dispatch(updateContact(contact)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Contact);
 
