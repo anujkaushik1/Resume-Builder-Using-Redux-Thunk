@@ -1,7 +1,7 @@
 import * as documentActions from '../actions/action';
 import initalState from './initialState.json'
 
-export default documentReducer = (state = initalState.document, action) => {
+const documentReducer = (state = initalState.document, action) => {
 
     switch (action.type){       
         
@@ -23,3 +23,4 @@ export default documentReducer = (state = initalState.document, action) => {
 
     }
 }
+export default documentReducer;

@@ -1,7 +1,7 @@
 import * as educationActions from '../actions/action';
 import initalState from './initialState.json'
 
-export default educationReducer = (state = initalState.education, action) => {
+const educationReducer = (state = initalState.education, action) => {
 
     switch (action.type) {
 
@@ -22,3 +22,6 @@ export default educationReducer = (state = initalState.education, action) => {
 
     }
 }
+
+
+export default educationReducer;

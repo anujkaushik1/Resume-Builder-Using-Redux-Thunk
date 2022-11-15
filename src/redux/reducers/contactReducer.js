@@ -1,7 +1,7 @@
 import * as contactActions from '../actions/action';
 import initalState from './initialState.json'
 
-export default contactReducer = (state = initalState.contact, action) => {
+const contactReducer = (state = initalState.contact, action) => {
 
     switch (action.type) {
 
@@ -22,3 +22,5 @@ export default contactReducer = (state = initalState.contact, action) => {
 
     }
 }
+
+export default contactReducer;
