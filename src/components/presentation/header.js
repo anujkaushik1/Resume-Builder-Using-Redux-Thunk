@@ -1,8 +1,14 @@
 import React from "react";
+import { connect } from "react-redux";
+import { isLoaded, isEmpty } from "react-redux-firebase";
 import { NavLink } from "react-router-dom";
 import logo from "../../static/images/logo.png";
+import * as authActions from '../../redux/actions/action';
+import { signOut } from "../../redux/actions/authActions";
+
 
 function LoggesOut(props) {
+  
   return (
     <ul>
       <li className="signup ">
@@ -20,9 +26,11 @@ function LoggesOut(props) {
 }
 
 const Header = (props) => {
-  // const auth = props.auth;
+  const auth = props.auth;
   const handleLogOut=()=>{
+    props.signOut();
    console.log('The user will sign out');
+
   }
 
   return (  
@@ -33,12 +41,12 @@ const Header = (props) => {
       </a> 
         <div className="header-links full-height">
 
-        {/* { isLoaded(auth) && !isEmpty(auth) ?<> */}
+        { isLoaded(auth) && !isEmpty(auth) ?<>
 
           <ul>
             <li className="signin ">
               <NavLink className="  " to="/">
-               Logged in as 
+               Logged in as {auth.email}
               </NavLink>
             </li>
             <li className="signin"> 
@@ -48,7 +56,7 @@ const Header = (props) => {
             </li>
           </ul>
 
-        {/* </>:<LoggesOut></LoggesOut>} */}
+        </>:<LoggesOut></LoggesOut>}
           
           <ul id="nav-mid">
             <li>
@@ -70,14 +78,14 @@ const Header = (props) => {
   );
 };
 
-// const mapStateToProps=(state)=>{
-//   return{
-//      auth: state.firebase.auth
-//   }
-// }
-// const mapDispatchToProps= (dispatch)=>{
-//   return {
-//    signOut:()=>dispatch(authActions.signout())
-//   }
-// }
-export default Header;
+const mapStateToProps=(state)=>{
+  return{
+     auth: state.firebase.auth
+  }
+}
+const mapDispatchToProps= (dispatch)=>{
+  return {
+   signOut:()=>dispatch(signOut())
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

@@ -1,5 +1,3 @@
-import { getFirebase } from 'react-redux-firebase';
-import { getFirestore } from 'redux-firestore';
 import * as authActions from './action';
 
 // ACTION CREATOR FUNCTIONS 
@@ -35,10 +33,10 @@ export const register = (userData) => {  // userdata will contain email & passwo
         dispatch(registerReq()) // request chl rhi hai wait (loading = true)
 
         const firebase = getFirebase();  // thunk mei firebase aagaya
-        const firestore = getFirebase();
+        const firestore = getFirestore();
 
         firebase.auth().createUserWithEmailAndPassword(userData.email, userData.password).then(async (data) => {
-            const res = firestore.collection('users').doc(data.user.uid).set({
+            const res = await firestore.collection('users').doc(data.user.uid).set({
                 email: userData.email,
                 resumeIds: []
             });
@@ -47,6 +45,7 @@ export const register = (userData) => {  // userdata will contain email & passwo
             dispatch(registerSuc());
 
         }).catch((err) => {
+            console.log(err.message);
             dispatch(registerFail(err));
 
             setTimeout(() => {
@@ -65,7 +64,7 @@ const signInReq = () => {
 
 const signInFail = (err) => {
     return {
-        type: authActions.signInFail,
+        type: authActions.SIGN_IN_FAILED,
         payload: err.message
     }
 }
@@ -106,7 +105,7 @@ export const signIn = (userData) => {  // userdata will contain email & password
 // direct work for signout
 
 export const signOut = () => {
-    return (dispatch, { getFirebase, getFirestore }) => {
+    return (dispatch,getState,{getFirebase}) => {
         const firebase = getFirebase();
         firebase.auth().signOut().then(() => {  // signout => predefined function
             dispatch({ type: authActions.SIGN_OUT_SUCCESS })

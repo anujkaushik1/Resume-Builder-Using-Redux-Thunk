@@ -1,8 +1,12 @@
 import React,{useState,useEffect} from "react";
-// import { isLoaded } from 'react-redux-firebase'
+import { connect } from "react-redux";
+import { isLoaded } from 'react-redux-firebase'
 // import { connect } from "react-redux";
 // import * as authActions from '../../actions/authActions';
 import { useHistory } from "react-router";
+import { register } from "../../redux/actions/authActions";
+
+
   function Register(props) {
  
     let history = useHistory();
@@ -15,18 +19,22 @@ import { useHistory } from "react-router";
         setPassword(e.target.value);
       }
    
-  const onSubmit=()=>{
+  const onSubmit= async()=>{
     
-    //  props.register({email:email, password:password})
-    
+     await props.register({email:email, password:password})
+
+     if(props.auth.uid !== null){
+      history.push('/')
+     }
+
   }
 
  
     return (
       <>
     {/* To save from multiple request */}
-      {/* {!isLoaded(props.auth)?<></>:<>
-        {props.authMine.loading?<h4 style={{marginTop:'10%',height:'52vh'}}>Patiently Wait...we are resgistering you in</h4>: */}
+      {!isLoaded(props.auth)?<></>:<>
+        {props.authMine.loading?<h4 style={{marginTop:'10%',height:'52vh'}}>Patiently Wait...we are resgistering you in</h4>:
           <div className="container med contact">
             <div className="section funnel-section">
                 <div className="form-card">
@@ -54,12 +62,25 @@ import { useHistory } from "react-router";
 
             </div>
         </div>
-
+  }
         </>
+  }
+  </>
     );
   }
 
+const mapStateToProps = (state) => {
+  return {
+    authMine : state.auth,   // jo mene auth banaya hai
+    auth : state.firebase.auth  // firebase vla auth
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    register : (userData) => dispatch(register(userData))      // user data => email, password, disptach(resgister) => register = import { register } from "../../redux/actions/authActions";
+  }
+}
 
 
-
-  export default Register
+  export default connect(mapStateToProps, mapDispatchToProps)(Register);
